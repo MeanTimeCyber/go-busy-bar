@@ -2,23 +2,44 @@ package main
 
 import (
 	"context"
+	"flag"
 
 	"github.com/MeanTimeCyber/go-busy-bar/client"
 )
 
-const (
-	barUSBHTTPEndpoint = "http://10.0.4.20/"
-)
-
 func main() {
-	// Create a new API client with the specified endpoint.
-	client := client.NewClient(barUSBHTTPEndpoint)
+	// define and process args
+	var command, ipAddress string
+	flag.StringVar(&command, "c", "status", "Command for the busy bar")
+	flag.StringVar(&ipAddress, "ip", "10.0.4.20", "IP address of the busy bar - assumes it's over USB on the fixed address")
+	flag.Parse()
 
-	// Call the GetStatus method to retrieve the status of the busy bar.
-	statusResp, err := client.GetStatus(context.Background(), nil)
-	if err != nil {
-		panic(err)
+	if command == "" {
+		println("No command specified")
+		flag.Usage()
+		printCommands()
+		return
 	}
 
-	statusResp.PrettyPrint()
+	// Create a new client with the specified endpoint
+	ctx := context.Background()
+	c := client.NewClient("http://" + ipAddress + "/")
+
+	switch command {
+	// get the device status information and print it to the console
+	case "status":
+		status, err := c.GetStatus(ctx, nil)
+		if err != nil {
+			panic(err)
+		}
+		status.PrettyPrint()
+	default:
+		println("Unknown command:", command)
+		printCommands()
+	}
+}
+
+func printCommands() {
+	println("Available commands:")
+	println("  status - Get the status of the busy bar")
 }
