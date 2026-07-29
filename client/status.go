@@ -1,5 +1,12 @@
 package client
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/markkurossi/tabulate"
+)
+
 type Status struct {
 	Device struct {
 		SerialNumber     string `json:"serial_number"`
@@ -36,8 +43,28 @@ type Status struct {
 }
 
 func (s *Status) PrettyPrint() {
-	println("Device Serial Number:", s.Device.SerialNumber)
-	println("Firmware Version:", s.Firmware.Version)
-	println("System Uptime:", s.System.Uptime)
-	println("Power State:", s.Power.State)
+	fmt.Printf("\nDevice Status\n")
+
+	tab := tabulate.New(tabulate.Unicode)
+	tab.Header("Field").SetAlign(tabulate.ML)
+	tab.Header("Value").SetAlign(tabulate.ML)
+
+	row := tab.Row()
+	row.Column("Device Serial Number")
+	row.Column(s.Device.SerialNumber)
+
+	row = tab.Row()
+	row.Column("Firmware Version")
+	row.Column(s.Firmware.Version)
+
+	row = tab.Row()
+	row.Column("System Uptime")
+	row.Column(s.System.Uptime)
+
+	row = tab.Row()
+	row.Column("Power State")
+	row.Column(s.Power.State)
+
+	tab.Print(os.Stdout)
+	fmt.Println()
 }
