@@ -1,5 +1,55 @@
 # Overview
 Golang client library for interacting with the [Busy Bar](https://busy.app/) via its HTTP API.
 
+# Usage
+## As a library
+There's a client implemented in [client.go](./client/client.go)
+
+As per the example CLI application, you can create it:
+
+```go
+// Create a new client with the specified endpoint
+ctx := context.Background()
+c := client.NewClient("http://" + ipAddress + "/")
+```
+
+And then use it to make different endpoint calls:
+
+```go
+status, err := c.GetStatus(ctx, nil)
+if err != nil {
+    fmt.Printf("Error getting device status: %v\n", err)
+    return
+}
+status.PrettyPrint()
+```
+
+## CLI tool
+Build it or use `go run`:
+
+```bash
+ go run cli/main.go -c status
+
+Status
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Field            ┃ Value                     ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Firmware Version │ 1.1.1                     │
+│ System Uptime    │ 00d 00h 21m 47s           │
+│ System Boot Time │ 2026-07-29T16:31:40+01:00 │
+│ Power State      │ discharging               │
+│ Battery Charge   │ 100%                      │
+│ Battery Voltage  │ 4179 mV                   │
+│ Battery Current  │ 0 mA                      │
+│ USB Voltage      │ 5112 mV                   │
+└──────────────────┴───────────────────────────┘
+```
+
+The flag `-c` is the command. The currently implemented commands are:
+
+- `status`: prints the current device status 
+- `info`: prints the device hardware info
+
+
 # References
 - [Online HTTP reference documentation](https://docs.busy.app/bar/dev/http-api)
