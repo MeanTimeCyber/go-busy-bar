@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 
 	"github.com/MeanTimeCyber/go-busy-bar/client"
 )
@@ -30,9 +31,32 @@ func main() {
 	case "status":
 		status, err := c.GetStatus(ctx, nil)
 		if err != nil {
-			panic(err)
+			fmt.Printf("Error getting device status: %v\n", err)
+			return
 		}
 		status.PrettyPrint()
+	// get the device name, info and account details and print them to the console
+	case "info":
+		deviceName, err := c.GetName(ctx, nil)
+		if err != nil {
+			fmt.Printf("Error getting device name: %v\n", err)
+			return
+		}
+		deviceName.PrettyPrint()
+
+		deviceInfo, err := c.GetStatusDevice(ctx, nil)
+		if err != nil {
+			fmt.Printf("Error getting device info: %v\n", err)
+			return
+		}
+		deviceInfo.PrettyPrint()
+
+		accountInfo, err := c.GetAccountInfo(ctx, nil)
+		if err != nil {
+			fmt.Printf("Error getting account info: %v\n", err)
+			return
+		}
+		accountInfo.PrettyPrint()
 	default:
 		println("Unknown command:", command)
 		printCommands()

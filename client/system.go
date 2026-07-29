@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/markkurossi/tabulate"
 )
@@ -43,17 +44,13 @@ type Status struct {
 }
 
 func (s *Status) PrettyPrint() {
-	fmt.Printf("\nDevice Status\n")
+	fmt.Printf("\nStatus\n")
 
 	tab := tabulate.New(tabulate.Unicode)
 	tab.Header("Field").SetAlign(tabulate.ML)
 	tab.Header("Value").SetAlign(tabulate.ML)
 
 	row := tab.Row()
-	row.Column("Device Serial Number")
-	row.Column(s.Device.SerialNumber)
-
-	row = tab.Row()
 	row.Column("Firmware Version")
 	row.Column(s.Firmware.Version)
 
@@ -62,8 +59,70 @@ func (s *Status) PrettyPrint() {
 	row.Column(s.System.Uptime)
 
 	row = tab.Row()
+	row.Column("System Boot Time")
+	row.Column(fmt.Sprintf("%s", time.Unix(int64(s.System.BootTime), 0).Format(time.RFC3339)))
+
+	row = tab.Row()
 	row.Column("Power State")
 	row.Column(s.Power.State)
+
+	row = tab.Row()
+	row.Column("Battery Charge")
+	row.Column(fmt.Sprintf("%d%%", s.Power.BatteryCharge))
+
+	row = tab.Row()
+	row.Column("Battery Voltage")
+	row.Column(fmt.Sprintf("%d mV", s.Power.BatteryVoltage))
+
+	row = tab.Row()
+	row.Column("Battery Current")
+	row.Column(fmt.Sprintf("%d mA", s.Power.BatteryCurrent))
+
+	row = tab.Row()
+	row.Column("USB Voltage")
+	row.Column(fmt.Sprintf("%d mV", s.Power.UsbVoltage))
+
+	tab.Print(os.Stdout)
+	fmt.Println()
+}
+
+type DeviceStatus struct {
+	SerialNumber     string `json:"serial_number"`
+	UsbMac           string `json:"usb_mac"`
+	WifiMac          string `json:"wifi_mac"`
+	BleMac           string `json:"ble_mac"`
+	OtpValid         bool   `json:"otp_valid"`
+	OtpModel         string `json:"otp_model"`
+	OtpTimestamp     int    `json:"otp_timestamp"`
+	FirmwareSecurity string `json:"firmware_security"`
+}
+
+func (d *DeviceStatus) PrettyPrint() {
+	fmt.Printf("\nDevice Info\n")
+
+	tab := tabulate.New(tabulate.Unicode)
+	tab.Header("Field").SetAlign(tabulate.ML)
+	tab.Header("Value").SetAlign(tabulate.ML)
+
+	row := tab.Row()
+	row.Column("Device Serial Number")
+	row.Column(d.SerialNumber)
+
+	row = tab.Row()
+	row.Column("USB MAC Address")
+	row.Column(d.UsbMac)
+
+	row = tab.Row()
+	row.Column("WiFi MAC Address")
+	row.Column(d.WifiMac)
+
+	row = tab.Row()
+	row.Column("BLE MAC Address")
+	row.Column(d.BleMac)
+
+	row = tab.Row()
+	row.Column("OTP Valid")
+	row.Column(fmt.Sprintf("%v", d.OtpValid))
 
 	tab.Print(os.Stdout)
 	fmt.Println()

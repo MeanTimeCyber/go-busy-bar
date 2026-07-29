@@ -89,8 +89,14 @@ func (c *Client) LinkAccount(ctx context.Context, query url.Values, payload any)
 	return c.do(ctx, http.MethodPost, "/api/account/link", query, payload)
 }
 
-func (c *Client) GetAccountInfo(ctx context.Context, query url.Values) ([]byte, error) {
-	return c.do(ctx, http.MethodGet, "/api/account/info", query, nil)
+func (c *Client) GetAccountInfo(ctx context.Context, query url.Values) (AccountInfo, error) {
+	var accountInfo AccountInfo
+	data, err := c.do(ctx, http.MethodGet, "/api/account/info", query, nil)
+	if err != nil {
+		return accountInfo, err
+	}
+	err = json.Unmarshal(data, &accountInfo)
+	return accountInfo, err
 }
 
 func (c *Client) GetAccountStatus(ctx context.Context, query url.Values) ([]byte, error) {
@@ -173,8 +179,14 @@ func (c *Client) SetHttpAccess(ctx context.Context, query url.Values, payload an
 	return c.do(ctx, http.MethodPost, "/api/access", query, payload)
 }
 
-func (c *Client) GetName(ctx context.Context, query url.Values) ([]byte, error) {
-	return c.do(ctx, http.MethodGet, "/api/name", query, nil)
+func (c *Client) GetName(ctx context.Context, query url.Values) (DeviceName, error) {
+	var deviceName DeviceName
+	data, err := c.do(ctx, http.MethodGet, "/api/name", query, nil)
+	if err != nil {
+		return deviceName, err
+	}
+	err = json.Unmarshal(data, &deviceName)
+	return deviceName, err
 }
 
 func (c *Client) PostName(ctx context.Context, query url.Values, payload any) ([]byte, error) {
@@ -276,8 +288,19 @@ func (c *Client) GetStatus(ctx context.Context, query url.Values) (*Status, erro
 	return &status, nil
 }
 
-func (c *Client) GetStatusDevice(ctx context.Context, query url.Values) ([]byte, error) {
-	return c.do(ctx, http.MethodGet, "/api/status/device", query, nil)
+func (c *Client) GetStatusDevice(ctx context.Context, query url.Values) (*DeviceStatus, error) {
+	resp, err := c.do(ctx, http.MethodGet, "/api/status/device", query, nil)
+
+	if err != nil {
+		return nil, err
+	}
+	var deviceStatus DeviceStatus
+
+	if err := json.Unmarshal(resp, &deviceStatus); err != nil {
+		return nil, err
+	}
+
+	return &deviceStatus, nil
 }
 
 func (c *Client) GetStatusFirmware(ctx context.Context, query url.Values) ([]byte, error) {
