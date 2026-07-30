@@ -22,6 +22,8 @@ func main() {
 		return
 	}
 
+	// TODO add password, check its present if on a wifi address
+
 	// Create a new client with the specified endpoint
 	ctx := context.Background()
 	c := client.NewClient("http://" + ipAddress + "/")
