@@ -149,3 +149,23 @@ func (a *APIVersion) PrettyPrint() {
 	tab.Print(os.Stdout)
 	fmt.Println()
 }
+
+// TransportType represents the transport type information returned by the device.
+type TransportType struct {
+	Type string `json:"type"`
+}
+
+func (t *TransportType) PrettyPrint() {
+	fmt.Printf("\nTransport Type\n")
+
+	tab := tabulate.New(tabulate.Unicode)
+	tab.Header("Field").SetAlign(tabulate.ML)
+	tab.Header("Value").SetAlign(tabulate.ML)
+
+	row := tab.Row()
+	row.Column("Transport Type")
+	row.Column(t.Type)
+
+	tab.Print(os.Stdout)
+	fmt.Println()
+}
