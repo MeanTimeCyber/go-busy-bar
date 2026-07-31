@@ -8,6 +8,7 @@ import (
 	"github.com/markkurossi/tabulate"
 )
 
+// Status represents the status information returned by the device.
 type Status struct {
 	Device struct {
 		SerialNumber     string `json:"serial_number"`
@@ -86,6 +87,7 @@ func (s *Status) PrettyPrint() {
 	fmt.Println()
 }
 
+// DeviceStatus represents the device status information returned by the device.
 type DeviceStatus struct {
 	SerialNumber     string `json:"serial_number"`
 	UsbMac           string `json:"usb_mac"`
@@ -123,6 +125,26 @@ func (d *DeviceStatus) PrettyPrint() {
 	row = tab.Row()
 	row.Column("OTP Valid")
 	row.Column(fmt.Sprintf("%v", d.OtpValid))
+
+	tab.Print(os.Stdout)
+	fmt.Println()
+}
+
+// APIVersion represents the API version information returned by the device.
+type APIVersion struct {
+	APISemver string `json:"api_semver"`
+}
+
+func (a *APIVersion) PrettyPrint() {
+	fmt.Printf("\nAPI Version\n")
+
+	tab := tabulate.New(tabulate.Unicode)
+	tab.Header("Field").SetAlign(tabulate.ML)
+	tab.Header("Value").SetAlign(tabulate.ML)
+
+	row := tab.Row()
+	row.Column("API Semver")
+	row.Column(a.APISemver)
 
 	tab.Print(os.Stdout)
 	fmt.Println()
