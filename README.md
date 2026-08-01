@@ -28,7 +28,7 @@ status.PrettyPrint()
 Build it with `Make` or use `go run`:
 
 ```bash
- go run cli/main.go -c status
+ go run cli/*.go -c status
 
 Status
 ┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
