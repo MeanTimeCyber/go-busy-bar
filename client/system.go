@@ -8,40 +8,15 @@ import (
 	"github.com/markkurossi/tabulate"
 )
 
-// Status represents the status information returned by the device.
 type Status struct {
-	Device struct {
-		SerialNumber     string `json:"serial_number"`
-		UsbMac           string `json:"usb_mac"`
-		WifiMac          string `json:"wifi_mac"`
-		BleMac           string `json:"ble_mac"`
-		OtpValid         bool   `json:"otp_valid"`
-		OtpModel         string `json:"otp_model"`
-		OtpTimestamp     int    `json:"otp_timestamp"`
-		FirmwareSecurity string `json:"firmware_security"`
-	} `json:"device"`
-	Firmware struct {
-		Version       string `json:"version"`
-		Target        int    `json:"target"`
-		Branch        string `json:"branch"`
-		BuildDate     string `json:"build_date"`
-		CommitHash    string `json:"commit_hash"`
-		NwpVersion    string `json:"nwp_version"`
-		MatterVersion string `json:"matter_version"`
-	} `json:"firmware"`
-	System struct {
-		APISemver         string `json:"api_semver"`
-		Uptime            string `json:"uptime"`
-		BootTime          int    `json:"boot_time"`
-		AutoUpdateEnabled bool   `json:"auto_update_enabled"`
-	} `json:"system"`
-	Power struct {
-		State          string `json:"state"`
-		BatteryCharge  int    `json:"battery_charge"`
-		BatteryVoltage int    `json:"battery_voltage"`
-		BatteryCurrent int    `json:"battery_current"`
-		UsbVoltage     int    `json:"usb_voltage"`
-	} `json:"power"`
+	// Device contains device identification and security info.
+	Device StatusDevice `json:"device"`
+	// Firmware contains firmware build and version information.
+	Firmware StatusFirmware `json:"firmware"`
+	// System contains API version and runtime state.
+	System StatusSystem `json:"system"`
+	// Power contains battery and USB power metrics.
+	Power StatusPower `json:"power"`
 }
 
 func (s *Status) PrettyPrint() {
@@ -87,19 +62,69 @@ func (s *Status) PrettyPrint() {
 	fmt.Println()
 }
 
-// DeviceStatus represents the device status information returned by the device.
-type DeviceStatus struct {
-	SerialNumber     string `json:"serial_number"`
-	UsbMac           string `json:"usb_mac"`
-	WifiMac          string `json:"wifi_mac"`
-	BleMac           string `json:"ble_mac"`
-	OtpValid         bool   `json:"otp_valid"`
-	OtpModel         string `json:"otp_model"`
-	OtpTimestamp     int    `json:"otp_timestamp"`
+type StatusDevice struct {
+	// SerialNumber is the device serial number.
+	SerialNumber string `json:"serial_number"`
+	// UsbMac is the MAC address of the USB ethernet interface.
+	UsbMac string `json:"usb_mac"`
+	// WifiMac is the Wi-Fi MAC address.
+	WifiMac string `json:"wifi_mac"`
+	// BleMac is the BLE MAC address.
+	BleMac string `json:"ble_mac"`
+	// OtpValid indicates whether OTP data is valid.
+	OtpValid bool `json:"otp_valid"`
+	// OtpModel is the device model code stored in OTP.
+	OtpModel string `json:"otp_model"`
+	// OtpTimestamp is the production timestamp.
+	OtpTimestamp int `json:"otp_timestamp"`
+	// FirmwareSecurity summarizes active firmware signature protections.
 	FirmwareSecurity string `json:"firmware_security"`
 }
 
-func (d *DeviceStatus) PrettyPrint() {
+type StatusFirmware struct {
+	// Version is the firmware version.
+	Version string `json:"version"`
+	// Target is the firmware target code.
+	Target int `json:"target"`
+	// Branch is the firmware git branch name.
+	Branch string `json:"branch"`
+	// BuildDate is the firmware build date.
+	BuildDate string `json:"build_date"`
+	// CommitHash is the firmware git commit hash.
+	CommitHash string `json:"commit_hash"`
+	// NwpVersion is the radio firmware version.
+	NwpVersion string `json:"nwp_version"`
+	// MatterVersion is the Matter stack version.
+	MatterVersion string `json:"matter_version"`
+}
+
+type StatusSystem struct {
+	// APISemver is the HTTP API semantic version.
+	APISemver string `json:"api_semver"`
+	// Uptime is the formatted system uptime string.
+	Uptime string `json:"uptime"`
+	// BootTime is the Unix timestamp when the system booted.
+	BootTime int `json:"boot_time"`
+	// AutoUpdateEnabled reports whether automatic updates are enabled.
+	AutoUpdateEnabled bool `json:"auto_update_enabled"`
+}
+
+type StatusPower struct {
+	// State is the current power state.
+	State string `json:"state"`
+	// BatteryCharge is the battery charge percentage.
+	BatteryCharge int `json:"battery_charge"`
+	// BatteryVoltage is the battery voltage in millivolts.
+	BatteryVoltage int `json:"battery_voltage"`
+	// BatteryCurrent is the battery current in milliamps.
+	BatteryCurrent int `json:"battery_current"`
+	// UsbVoltage is the USB voltage in millivolts.
+	UsbVoltage int `json:"usb_voltage"`
+}
+
+type DeviceStatus = StatusDevice
+
+func (d *StatusDevice) PrettyPrint() {
 	fmt.Printf("\nDevice Info\n")
 
 	tab := tabulate.New(tabulate.Unicode)
@@ -130,12 +155,14 @@ func (d *DeviceStatus) PrettyPrint() {
 	fmt.Println()
 }
 
-// APIVersion represents the API version information returned by the device.
-type APIVersion struct {
+type VersionInfo struct {
+	// APISemver is the API semantic version.
 	APISemver string `json:"api_semver"`
 }
 
-func (a *APIVersion) PrettyPrint() {
+type APIVersion = VersionInfo
+
+func (a *VersionInfo) PrettyPrint() {
 	fmt.Printf("\nAPI Version\n")
 
 	tab := tabulate.New(tabulate.Unicode)
@@ -150,12 +177,14 @@ func (a *APIVersion) PrettyPrint() {
 	fmt.Println()
 }
 
-// TransportType represents the transport type information returned by the device.
-type TransportType struct {
+type NetworkInterfaceInfo struct {
+	// Type is the active network transport type.
 	Type string `json:"type"`
 }
 
-func (t *TransportType) PrettyPrint() {
+type TransportType = NetworkInterfaceInfo
+
+func (t *NetworkInterfaceInfo) PrettyPrint() {
 	fmt.Printf("\nTransport Type\n")
 
 	tab := tabulate.New(tabulate.Unicode)
