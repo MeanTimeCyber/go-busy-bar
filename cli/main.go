@@ -8,6 +8,7 @@ import (
 	barclient "github.com/MeanTimeCyber/go-busy-bar/client"
 )
 
+// as per https://docs.busy.app/bar/dev/http-api#via-usb
 const defaultUSBAddress = "10.0.4.20"
 
 func main() {
@@ -37,6 +38,12 @@ func main() {
 	ctx := context.Background()
 
 	// TODO get network status to check we're connected to the device, and if not, print a message and exit
+	err = checkConnection(ctx, client)
+
+	if err != nil {
+		fmt.Printf("Error checking connection: %v\n", err)
+		return
+	}
 
 	// Execute the provided command
 	switch command {
@@ -84,6 +91,18 @@ func main() {
 	}
 }
 
+// checkConnection checks if the client is connected to the busy bar device.
+func checkConnection(ctx context.Context, client *barclient.Client) error {
+	connection, err := client.GetTransport(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Connected via: %s\n", connection.Type)
+
+	return nil
+}
+
 // getClient creates a new Busy Bar client with the specified IP address and password.
 func getClient(ipAddress, password string) (*barclient.Client, error) {
 	var client *barclient.Client
@@ -93,11 +112,11 @@ func getClient(ipAddress, password string) (*barclient.Client, error) {
 		// If the IP address is not the default USB address, we assume it's a Wi-Fi address and require a password
 		if password == "" {
 			flag.Usage()
-			return nil, fmt.Errorf("password is required for access over Wi-Fi address")
+			return nil, fmt.Errorf("password is required for access over Wi-Fi address. See https://docs.busy.app/bar/dev/http-api#via-wi-fi for instructions")
 		}
 
 		// Create a new client with the specified endpoint and password
-		client = barclient.NewClientWithAPIKey("http://" + ipAddress +"/", password)
+		client = barclient.NewClientWithAPIKey("http://"+ipAddress+"/", password)
 
 	} else {
 		// Create a new client with the specified endpoint
