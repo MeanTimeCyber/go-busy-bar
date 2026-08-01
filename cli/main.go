@@ -71,6 +71,13 @@ func main() {
 		}
 		deviceInfo.PrettyPrint()
 
+		networkStatus, err := client.GetWifiStatus(ctx, nil)
+		if err != nil {
+			fmt.Printf("Error getting network status: %v\n", err)
+			return
+		}
+		networkStatus.PrettyPrint()
+
 		accountInfo, err := client.GetAccountInfo(ctx, nil)
 		if err != nil {
 			fmt.Printf("Error getting account info: %v\n", err)
@@ -112,6 +119,7 @@ func getClient(ipAddress, password string) (*barclient.Client, error) {
 		// If the IP address is not the default USB address, we assume it's a Wi-Fi address and require a password
 		if password == "" {
 			flag.Usage()
+			fmt.Println()
 			return nil, fmt.Errorf("password is required for access over Wi-Fi address. See https://docs.busy.app/bar/dev/http-api#via-wi-fi for instructions")
 		}
 
