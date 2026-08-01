@@ -25,7 +25,7 @@ status.PrettyPrint()
 ```
 
 ## CLI tool
-Build it or use `go run`:
+Build it with `Make` or use `go run`:
 
 ```bash
  go run cli/main.go -c status
@@ -45,10 +45,13 @@ Status
 └──────────────────┴───────────────────────────┘
 ```
 
-The flag `-c` is the command. The currently implemented commands are:
+It assumes the Busy Bar is connected over USB/Ethernet on the default address. To use over Wi-Fi, specify the address with `-ip` and the password with '-p'.
+
+The flag `-c` is for the command you want to run. The currently implemented commands are:
 
 - `status`: prints the current device status 
 - `info`: prints the device hardware info
+- `version`: prints the current API version running on the bar.
 
 
 # References
