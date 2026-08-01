@@ -62,7 +62,7 @@ type UpdateChangelog struct {
 }
 
 func (u *UpdateStatus) PrettyPrint() {
-	fmt.Printf("\nUpdate Status\n")
+	fmt.Printf("\nFirmware Update Status\n")
 
 	tab := tabulate.New(tabulate.Unicode)
 	tab.Header("Field").SetAlign(tabulate.ML)

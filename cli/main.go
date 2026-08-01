@@ -63,6 +63,11 @@ func main() {
 	// get the API version and print it to the console
 	case "version":
 		printVersion(client, ctx)
+	case "firmware":
+		printFirmware(client, ctx)
+	// show the help message
+	case "help":
+		printCommands()
 	default:
 		println("Unknown command:", command)
 		printCommands()

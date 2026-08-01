@@ -9,10 +9,12 @@ import (
 
 // printCommands prints the available commands for the busy bar.
 func printCommands() {
-	println("Available commands:")
-	println("  status - Get the status of the busy bar")
-	println("  info - Get the device info of the busy bar")
-	println("  version - Get the API version of the busy bar")
+	fmt.Println("Available commands:")
+	fmt.Println("  status - Get the status of the busy bar")
+	fmt.Println("  info - Get the device info of the busy bar")
+	fmt.Println("  version - Get the API version of the busy bar")
+	fmt.Println("  firmware - Get the firmware version of the busy bar")
+	fmt.Println("  help - Show this help message")
 }
 
 // printStatus retrieves and prints the device status.
@@ -64,4 +66,31 @@ func printVersion(client *barclient.Client, ctx context.Context) {
 		return
 	}
 	apiVersion.PrettyPrint()
+}
+
+// printFirmware retrieves the firmware version from the client and prints it to the console.
+func printFirmware(client *barclient.Client, ctx context.Context) {
+	// get the firmware status from the client
+	firmwareStatus, err := client.GetStatusFirmware(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting firmware status: %v\n", err)
+		return
+	}
+	firmwareStatus.PrettyPrint()
+
+	// Get the firmware update information from the client
+	firmwareVersion, err := client.GetFirmwareUpdateStatus(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting firmware version: %v\n", err)
+		return
+	}
+	firmwareVersion.PrettyPrint()
+
+	// get the auto-update status from the client
+	autoUpdateStatus, err := client.GetAutoupdateSettings(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting auto-update status: %v\n", err)
+		return
+	}
+	autoUpdateStatus.PrettyPrint()
 }

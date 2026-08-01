@@ -98,6 +98,45 @@ type StatusFirmware struct {
 	MatterVersion string `json:"matter_version"`
 }
 
+func (s *StatusFirmware) PrettyPrint() {
+	fmt.Printf("\nFirmware Info\n")
+
+	tab := tabulate.New(tabulate.Unicode)
+	tab.Header("Field").SetAlign(tabulate.ML)
+	tab.Header("Value").SetAlign(tabulate.ML)
+
+	row := tab.Row()
+	row.Column("Version")
+	row.Column(s.Version)
+
+	row = tab.Row()
+	row.Column("Target")
+	row.Column(fmt.Sprintf("%d", s.Target))
+
+	row = tab.Row()
+	row.Column("Branch")
+	row.Column(s.Branch)
+
+	row = tab.Row()
+	row.Column("Build Date")
+	row.Column(s.BuildDate)
+
+	row = tab.Row()
+	row.Column("Commit Hash")
+	row.Column(s.CommitHash)
+
+	row = tab.Row()
+	row.Column("NWP Version")
+	row.Column(s.NwpVersion)
+
+	row = tab.Row()
+	row.Column("Matter Version")
+	row.Column(s.MatterVersion)
+
+	tab.Print(os.Stdout)
+	fmt.Println()
+}
+
 type StatusSystem struct {
 	// APISemver is the HTTP API semantic version.
 	APISemver string `json:"api_semver"`
@@ -107,6 +146,33 @@ type StatusSystem struct {
 	BootTime int `json:"boot_time"`
 	// AutoUpdateEnabled reports whether automatic updates are enabled.
 	AutoUpdateEnabled bool `json:"auto_update_enabled"`
+}
+
+func (s *StatusSystem) PrettyPrint() {
+	fmt.Printf("\nSystem Info\n")
+
+	tab := tabulate.New(tabulate.Unicode)
+	tab.Header("Field").SetAlign(tabulate.ML)
+	tab.Header("Value").SetAlign(tabulate.ML)
+
+	row := tab.Row()
+	row.Column("API Semver")
+	row.Column(s.APISemver)
+
+	row = tab.Row()
+	row.Column("Uptime")
+	row.Column(s.Uptime)
+
+	row = tab.Row()
+	row.Column("Boot Time")
+	row.Column(fmt.Sprintf("%s", time.Unix(int64(s.BootTime), 0).Format(time.RFC3339)))
+
+	row = tab.Row()
+	row.Column("Auto Update Enabled")
+	row.Column(fmt.Sprintf("%v", s.AutoUpdateEnabled))
+
+	tab.Print(os.Stdout)
+	fmt.Println()
 }
 
 type StatusPower struct {
@@ -120,6 +186,37 @@ type StatusPower struct {
 	BatteryCurrent int `json:"battery_current"`
 	// UsbVoltage is the USB voltage in millivolts.
 	UsbVoltage int `json:"usb_voltage"`
+}
+
+func (s *StatusPower) PrettyPrint() {
+	fmt.Printf("\nPower Info\n")
+
+	tab := tabulate.New(tabulate.Unicode)
+	tab.Header("Field").SetAlign(tabulate.ML)
+	tab.Header("Value").SetAlign(tabulate.ML)
+
+	row := tab.Row()
+	row.Column("State")
+	row.Column(s.State)
+
+	row = tab.Row()
+	row.Column("Battery Charge")
+	row.Column(fmt.Sprintf("%d%%", s.BatteryCharge))
+
+	row = tab.Row()
+	row.Column("Battery Voltage")
+	row.Column(fmt.Sprintf("%d mV", s.BatteryVoltage))
+
+	row = tab.Row()
+	row.Column("Battery Current")
+	row.Column(fmt.Sprintf("%d mA", s.BatteryCurrent))
+
+	row = tab.Row()
+	row.Column("USB Voltage")
+	row.Column(fmt.Sprintf("%d mV", s.UsbVoltage))
+
+	tab.Print(os.Stdout)
+	fmt.Println()
 }
 
 type DeviceStatus = StatusDevice
