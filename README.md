@@ -56,3 +56,4 @@ The flag `-c` is for the command you want to run. The currently implemented comm
 
 # References
 - [Online HTTP reference documentation](https://docs.busy.app/bar/dev/http-api)
+- [HTTP API Spec (over USB/Ethernet to a local device)](http://10.0.4.20/docs/#/)

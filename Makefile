@@ -1,2 +1,2 @@
 default:
-	go build -ldflags "-s -w" -o busy-bar-cli ./cli/main.go
+	go build -ldflags "-s -w" -o busy-bar-cli ./cli/*.go
