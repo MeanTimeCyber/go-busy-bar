@@ -25,6 +25,13 @@ func printStatus(client *barclient.Client, ctx context.Context) {
 		return
 	}
 	status.PrettyPrint()
+
+	networkStatus, err := client.GetWifiStatus(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting network status: %v\n", err)
+		return
+	}
+	networkStatus.PrettyPrint()
 }
 
 // printInfo retrieves and prints the device name, info, network status, and account details.
@@ -42,13 +49,6 @@ func printInfo(client *barclient.Client, ctx context.Context) {
 		return
 	}
 	deviceInfo.PrettyPrint()
-
-	networkStatus, err := client.GetWifiStatus(ctx, nil)
-	if err != nil {
-		fmt.Printf("Error getting network status: %v\n", err)
-		return
-	}
-	networkStatus.PrettyPrint()
 
 	accountInfo, err := client.GetAccountInfo(ctx, nil)
 	if err != nil {
