@@ -3,6 +3,7 @@ package client
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/markkurossi/tabulate"
 )
@@ -34,6 +35,23 @@ type ErrorResponse struct {
 	Error string `json:"error"`
 	// Code is the numeric error code.
 	Code int `json:"code"`
+}
+
+// APIError wraps an HTTP error response with a parsed OpenAPI error payload.
+type APIError struct {
+	StatusCode int
+	Response   ErrorResponse
+	Body       []byte
+}
+
+func (e *APIError) Error() string {
+	if e.Response.Error != "" {
+		return fmt.Sprintf("api error %d: %s", e.StatusCode, e.Response.Error)
+	}
+	if len(e.Body) > 0 {
+		return fmt.Sprintf("api error %d: %s", e.StatusCode, strings.TrimSpace(string(e.Body)))
+	}
+	return fmt.Sprintf("api error %d", e.StatusCode)
 }
 
 func (e *ErrorResponse) PrettyPrint() {

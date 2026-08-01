@@ -85,6 +85,13 @@ func (c *Client) do(ctx context.Context, method, path string, query url.Values, 
 	}
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		var apiErr ErrorResponse
+		if len(responseBody) > 0 {
+			if err := json.Unmarshal(responseBody, &apiErr); err == nil && apiErr.Error != "" {
+				return nil, &APIError{StatusCode: resp.StatusCode, Response: apiErr, Body: responseBody}
+			}
+		}
+
 		return nil, fmt.Errorf("%s %s returned status %d: %s", method, req.URL.String(), resp.StatusCode, string(responseBody))
 	}
 
