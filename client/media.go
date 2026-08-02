@@ -7,13 +7,18 @@ import (
 )
 
 // UploadAssetWithAppId uploads an asset file to the Busy Bar API with the specified application ID.
-func (c *Client) UploadAssetWithAppId(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/assets/upload", query, payload)
+func (c *Client) UploadAssetWithAppId(ctx context.Context, applicationName, file string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/assets/upload", requiredQuery(map[string]string{
+		"application_name": applicationName,
+		"file":             file,
+	}), payload)
 }
 
 // UploadAsset uploads an asset file to the Busy Bar API.
-func (c *Client) DeleteAppAssets(ctx context.Context, query url.Values) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodDelete, "/api/assets/upload", query, nil)
+func (c *Client) DeleteAppAssets(ctx context.Context, applicationName string) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodDelete, "/api/assets/upload", requiredQuery(map[string]string{
+		"application_name": applicationName,
+	}), nil)
 }
 
 // DrawOnDisplayWithAppId draws on the Busy Bar display with the specified application ID.

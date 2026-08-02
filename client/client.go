@@ -116,3 +116,11 @@ func doJSON[T any](c *Client, ctx context.Context, method, path string, query ur
 
 	return &value, nil
 }
+
+func requiredQuery(params map[string]string) url.Values {
+	query := make(url.Values, len(params))
+	for key, value := range params {
+		query.Set(key, value)
+	}
+	return query
+}

@@ -80,13 +80,17 @@ func (c *Client) GetFirmwareUpdateStatus(ctx context.Context, query url.Values) 
 }
 
 // GetFirmwareUpdateChangelog retrieves the changelog for a specific firmware version.
-func (c *Client) GetUpdateChangelog(ctx context.Context, query url.Values) (*UpdateChangelog, error) {
-	return doJSON[UpdateChangelog](c, ctx, http.MethodGet, "/api/update/changelog", query, nil)
+func (c *Client) GetUpdateChangelog(ctx context.Context, version string) (*UpdateChangelog, error) {
+	return doJSON[UpdateChangelog](c, ctx, http.MethodGet, "/api/update/changelog", requiredQuery(map[string]string{
+		"version": version,
+	}), nil)
 }
 
 // GetAutoupdateSettings retrieves the current automatic update settings.
-func (c *Client) InstallFirmwareUpdate(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/update/install", query, payload)
+func (c *Client) InstallFirmwareUpdate(ctx context.Context, version string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/update/install", requiredQuery(map[string]string{
+		"version": version,
+	}), payload)
 }
 
 // AbortFirmwareDownload aborts an ongoing firmware download.

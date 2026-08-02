@@ -43,8 +43,10 @@ func (c *Client) GetHttpAccess(ctx context.Context, query url.Values) (*HttpAcce
 }
 
 // SetHttpAccess contains HTTP access control information.
-func (c *Client) SetHttpAccess(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/access", query, payload)
+func (c *Client) SetHttpAccess(ctx context.Context, mode string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/access", requiredQuery(map[string]string{
+		"mode": mode,
+	}), payload)
 }
 
 // GetName retrieves the device name from the Busy Bar API.
@@ -63,8 +65,10 @@ func (c *Client) GetDisplayBrightness(ctx context.Context, query url.Values) (*D
 }
 
 // SetDisplayBrightness sets the display brightness using the Busy Bar API.
-func (c *Client) SetDisplayBrightness(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/display/brightness", query, payload)
+func (c *Client) SetDisplayBrightness(ctx context.Context, value string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/display/brightness", requiredQuery(map[string]string{
+		"value": value,
+	}), payload)
 }
 
 // GetAudioVolume retrieves the current audio volume from the Busy Bar API.
@@ -73,8 +77,10 @@ func (c *Client) GetAudioVolume(ctx context.Context, query url.Values) (*AudioVo
 }
 
 // SetAudioVolume sets the audio volume using the Busy Bar API.
-func (c *Client) SetAudioVolume(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/audio/volume", query, payload)
+func (c *Client) SetAudioVolume(ctx context.Context, volume string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/audio/volume", requiredQuery(map[string]string{
+		"volume": volume,
+	}), payload)
 }
 
 // ConnectWebSocket connects to the Busy Bar WebSocket API.
@@ -83,8 +89,10 @@ func (c *Client) ConnectWebSocket(ctx context.Context, query url.Values) ([]byte
 }
 
 // GetScreen retrieves the current screen state from the Busy Bar API.
-func (c *Client) GetScreen(ctx context.Context, query url.Values) ([]byte, error) {
-	return c.do(ctx, http.MethodGet, "/api/screen", query, nil)
+func (c *Client) GetScreen(ctx context.Context, display string) ([]byte, error) {
+	return c.do(ctx, http.MethodGet, "/api/screen", requiredQuery(map[string]string{
+		"display": display,
+	}), nil)
 }
 
 func (d *DeviceName) PrettyPrint() {

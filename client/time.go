@@ -35,8 +35,10 @@ func (c *Client) GetTime(ctx context.Context, query url.Values) (*TimestampInfo,
 }
 
 // SetTimeTimestamp sets the current timestamp on the Busy Bar API.
-func (c *Client) SetTimeTimestamp(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/time/timestamp", query, payload)
+func (c *Client) SetTimeTimestamp(ctx context.Context, timestamp string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/time/timestamp", requiredQuery(map[string]string{
+		"timestamp": timestamp,
+	}), payload)
 }
 
 // GetTimeTimezone retrieves the current timezone from the Busy Bar API.
@@ -45,8 +47,10 @@ func (c *Client) GetTimeTimezone(ctx context.Context, query url.Values) (*Timezo
 }
 
 // SetTimeTimezone sets the current timezone on the Busy Bar API.
-func (c *Client) SetTimeTimezone(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/time/timezone", query, payload)
+func (c *Client) SetTimeTimezone(ctx context.Context, timezone string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/time/timezone", requiredQuery(map[string]string{
+		"timezone": timezone,
+	}), payload)
 }
 
 // GetTimeTzlist retrieves the list of supported timezones from the Busy Bar API.

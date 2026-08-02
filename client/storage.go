@@ -34,14 +34,14 @@ type StorageStatus struct {
 }
 
 func storagePathQuery(path string) url.Values {
-	return url.Values{"path": []string{path}}
+	return requiredQuery(map[string]string{"path": path})
 }
 
 func storageRenameQuery(path, newPath string) url.Values {
-	return url.Values{
-		"path":     []string{path},
-		"new_path": []string{newPath},
-	}
+	return requiredQuery(map[string]string{
+		"path":     path,
+		"new_path": newPath,
+	})
 }
 
 // WriteStorageFile writes a file to the device storage.

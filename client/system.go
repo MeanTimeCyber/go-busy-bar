@@ -11,8 +11,10 @@ import (
 )
 
 // SetInputKey sets the input key using the Busy Bar API.
-func (c *Client) SetInputKey(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/input", query, payload)
+func (c *Client) SetInputKey(ctx context.Context, key string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/input", requiredQuery(map[string]string{
+		"key": key,
+	}), payload)
 }
 
 // GetVersion retrieves the firmware version from the Busy Bar API.
