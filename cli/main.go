@@ -65,6 +65,10 @@ func main() {
 		printVersion(client, ctx)
 	case "firmware":
 		printFirmware(client, ctx)
+	case "settings":
+		printSettings(client, ctx)
+	case "storage":
+		printStorage(client, ctx)
 	// show the help message
 	case "help":
 		printCommands()

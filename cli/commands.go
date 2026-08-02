@@ -14,6 +14,8 @@ func printCommands() {
 	fmt.Println("  info - Get the device info of the busy bar")
 	fmt.Println("  version - Get the API version of the busy bar")
 	fmt.Println("  firmware - Get the firmware version of the busy bar")
+	fmt.Println("  settings - Get the settings of the busy bar")
+	fmt.Println("  storage - Get the storage info of the busy bar")
 	fmt.Println("  help - Show this help message")
 }
 
@@ -32,6 +34,37 @@ func printStatus(client *barclient.Client, ctx context.Context) {
 		return
 	}
 	networkStatus.PrettyPrint()
+
+	bleStatus, err := client.GetBleStatus(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting BLE status: %v\n", err)
+		return
+	}
+	bleStatus.PrettyPrint()
+}
+
+// printSettings retrieves and prints the HTTP access info, display brightness, and audio volume settings.
+func printSettings(client *barclient.Client, ctx context.Context) {
+	httpAccessInfo, err := client.GetHttpAccess(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting HTTP access info: %v\n", err)
+		return
+	}
+	httpAccessInfo.PrettyPrint()
+
+	displayBrightnessInfo, err := client.GetDisplayBrightness(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting display brightness info: %v\n", err)
+		return
+	}
+	displayBrightnessInfo.PrettyPrint()
+
+	audioVolumeInfo, err := client.GetAudioVolume(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting audio volume info: %v\n", err)
+		return
+	}
+	audioVolumeInfo.PrettyPrint()
 }
 
 // printInfo retrieves and prints the device name, info, network status, and account details.
@@ -93,4 +126,20 @@ func printFirmware(client *barclient.Client, ctx context.Context) {
 		return
 	}
 	autoUpdateStatus.PrettyPrint()
+}
+
+func printStorage(client *barclient.Client, ctx context.Context) {
+	storageStatus, err := client.GetStorageStatus(ctx, nil)
+	if err != nil {
+		fmt.Printf("Error getting storage status: %v\n", err)
+		return
+	}
+	storageStatus.PrettyPrint()
+
+	storageList, err := client.ListStorageFiles(ctx, "/ext")
+	if err != nil {
+		fmt.Printf("Error getting storage list: %v\n", err)
+		return
+	}
+	storageList.PrettyPrint()
 }

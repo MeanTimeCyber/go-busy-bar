@@ -33,34 +33,45 @@ type StorageStatus struct {
 	TotalBytes int `json:"total_bytes"`
 }
 
+func storagePathQuery(path string) url.Values {
+	return url.Values{"path": []string{path}}
+}
+
+func storageRenameQuery(path, newPath string) url.Values {
+	return url.Values{
+		"path":     []string{path},
+		"new_path": []string{newPath},
+	}
+}
+
 // WriteStorageFile writes a file to the device storage.
-func (c *Client) WriteStorageFile(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/storage/write", query, payload)
+func (c *Client) WriteStorageFile(ctx context.Context, path string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/storage/write", storagePathQuery(path), payload)
 }
 
 // ReadStorageFile reads a file from the device storage.
-func (c *Client) ReadStorageFile(ctx context.Context, query url.Values) ([]byte, error) {
-	return c.do(ctx, http.MethodGet, "/api/storage/read", query, nil)
+func (c *Client) ReadStorageFile(ctx context.Context, path string) ([]byte, error) {
+	return c.do(ctx, http.MethodGet, "/api/storage/read", storagePathQuery(path), nil)
 }
 
 // ListStorageFiles retrieves the list of files and directories from the device storage.
-func (c *Client) ListStorageFiles(ctx context.Context, query url.Values) (*StorageList, error) {
-	return doJSON[StorageList](c, ctx, http.MethodGet, "/api/storage/list", query, nil)
+func (c *Client) ListStorageFiles(ctx context.Context, path string) (*StorageList, error) {
+	return doJSON[StorageList](c, ctx, http.MethodGet, "/api/storage/list", storagePathQuery(path), nil)
 }
 
 // RemoveStorageFile removes a file from the device storage.
-func (c *Client) RemoveStorageFile(ctx context.Context, query url.Values) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodDelete, "/api/storage/remove", query, nil)
+func (c *Client) RemoveStorageFile(ctx context.Context, path string) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodDelete, "/api/storage/remove", storagePathQuery(path), nil)
 }
 
 // CreateStorageDir creates a directory in the device storage.
-func (c *Client) CreateStorageDir(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/storage/mkdir", query, payload)
+func (c *Client) CreateStorageDir(ctx context.Context, path string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/storage/mkdir", storagePathQuery(path), payload)
 }
 
 // RenameStorageFile renames a file in the device storage.
-func (c *Client) RenameStorageFile(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/storage/rename", query, payload)
+func (c *Client) RenameStorageFile(ctx context.Context, path, newPath string, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/storage/rename", storageRenameQuery(path, newPath), payload)
 }
 
 // GetStorageStatus retrieves the storage status information from the Busy Bar API.

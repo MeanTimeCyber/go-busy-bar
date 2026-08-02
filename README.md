@@ -51,7 +51,10 @@ The flag `-c` is for the command you want to run. The currently implemented comm
 
 - `status`: prints the current device status 
 - `info`: prints the device hardware info
+- `settings`: prints the current settings of the bar
 - `version`: prints the current API version running on the bar.
+- `firmware`: prints details of the installed firmware
+
 
 
 # References
