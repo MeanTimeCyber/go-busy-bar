@@ -1,7 +1,10 @@
 package client
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/markkurossi/tabulate"
@@ -24,6 +27,31 @@ type TimezoneInfo struct {
 type TimezoneListResponse struct {
 	// List contains supported timezone entries.
 	List []TimezoneInfo `json:"list"`
+}
+
+// GetTime retrieves the current timestamp from the Busy Bar API.
+func (c *Client) GetTime(ctx context.Context, query url.Values) (*TimestampInfo, error) {
+	return doJSON[TimestampInfo](c, ctx, http.MethodGet, "/api/time", query, nil)
+}
+
+// SetTimeTimestamp sets the current timestamp on the Busy Bar API.
+func (c *Client) SetTimeTimestamp(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/time/timestamp", query, payload)
+}
+
+// GetTimeTimezone retrieves the current timezone from the Busy Bar API.
+func (c *Client) GetTimeTimezone(ctx context.Context, query url.Values) (*TimezoneInfo, error) {
+	return doJSON[TimezoneInfo](c, ctx, http.MethodGet, "/api/time/timezone", query, nil)
+}
+
+// SetTimeTimezone sets the current timezone on the Busy Bar API.
+func (c *Client) SetTimeTimezone(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/time/timezone", query, payload)
+}
+
+// GetTimeTzlist retrieves the list of supported timezones from the Busy Bar API.
+func (c *Client) GetTimeTzlist(ctx context.Context, query url.Values) (*TimezoneListResponse, error) {
+	return doJSON[TimezoneListResponse](c, ctx, http.MethodGet, "/api/time/tzlist", query, nil)
 }
 
 func (t *TimestampInfo) PrettyPrint() {

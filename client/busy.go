@@ -1,7 +1,10 @@
 package client
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/markkurossi/tabulate"
@@ -70,6 +73,26 @@ type BusyTimerIntervalSettings struct {
 	IntervalWorkCyclesCount int `json:"interval_work_cycles_count"`
 	// IsAutostartEnabled controls whether intervals auto-start.
 	IsAutostartEnabled bool `json:"is_autostart_enabled"`
+}
+
+// GetBusySnapshot retrieves the current BUSY timer snapshot and BUSY bar settings.
+func (c *Client) GetBusySnapshot(ctx context.Context, query url.Values) (*BusySnapshot, error) {
+	return doJSON[BusySnapshot](c, ctx, http.MethodGet, "/api/busy/snapshot", query, nil)
+}
+
+// SetBusySnapshot sets the current BUSY timer snapshot and BUSY bar settings.
+func (c *Client) SetBusySnapshot(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPut, "/api/busy/snapshot", query, payload)
+}
+
+// GetBusyProfile retrieves the BUSY profile for the specified slot.
+func (c *Client) GetBusyProfile(ctx context.Context, slot string, query url.Values) (*BusyProfile, error) {
+	return doJSON[BusyProfile](c, ctx, http.MethodGet, fmt.Sprintf("/api/busy/profiles/%s", url.PathEscape(slot)), query, nil)
+}
+
+// SetBusyProfile sets the BUSY profile for the specified slot.
+func (c *Client) SetBusyProfile(ctx context.Context, slot string, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPut, fmt.Sprintf("/api/busy/profiles/%s", url.PathEscape(slot)), query, payload)
 }
 
 func (b *BusySnapshot) PrettyPrint() {

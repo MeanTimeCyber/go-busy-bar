@@ -1,7 +1,10 @@
 package client
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/markkurossi/tabulate"
@@ -59,6 +62,46 @@ type AutoupdateSettings struct {
 type UpdateChangelog struct {
 	// Changelog contains release notes for a requested firmware version.
 	Changelog string `json:"changelog"`
+}
+
+// UpdatePayload is the payload for firmware update requests.
+func (c *Client) UpdateFirmware(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/update", query, payload)
+}
+
+// CheckFirmwareUpdate checks for available firmware updates.
+func (c *Client) CheckFirmwareUpdate(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/update/check", query, payload)
+}
+
+// GetFirmwareUpdateStatus retrieves the current firmware update status.
+func (c *Client) GetFirmwareUpdateStatus(ctx context.Context, query url.Values) (*UpdateStatus, error) {
+	return doJSON[UpdateStatus](c, ctx, http.MethodGet, "/api/update/status", query, nil)
+}
+
+// GetFirmwareUpdateChangelog retrieves the changelog for a specific firmware version.
+func (c *Client) GetUpdateChangelog(ctx context.Context, query url.Values) (*UpdateChangelog, error) {
+	return doJSON[UpdateChangelog](c, ctx, http.MethodGet, "/api/update/changelog", query, nil)
+}
+
+// GetAutoupdateSettings retrieves the current automatic update settings.
+func (c *Client) InstallFirmwareUpdate(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/update/install", query, payload)
+}
+
+// AbortFirmwareDownload aborts an ongoing firmware download.
+func (c *Client) AbortFirmwareDownload(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/update/abort_download", query, payload)
+}
+
+// GetAutoupdateSettings retrieves the current automatic update settings.
+func (c *Client) GetAutoupdateSettings(ctx context.Context, query url.Values) (*AutoupdateSettings, error) {
+	return doJSON[AutoupdateSettings](c, ctx, http.MethodGet, "/api/update/autoupdate", query, nil)
+}
+
+// SetAutoupdateSettings updates the automatic update settings.
+func (c *Client) SetAutoupdateSettings(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/update/autoupdate", query, payload)
 }
 
 func (u *UpdateStatus) PrettyPrint() {

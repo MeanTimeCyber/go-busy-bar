@@ -1,7 +1,10 @@
 package client
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/markkurossi/tabulate"
@@ -12,6 +15,26 @@ type BleStatusResponse struct {
 	Status string `json:"status"`
 	// Address is the remote device address when BLE status is connected.
 	Address string `json:"address,omitempty"`
+}
+
+// PostBleEnable sends a request to enable BLE on the device.
+func (c *Client) PostBleEnable(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/ble/enable", query, payload)
+}
+
+// PostBleDisable sends a request to disable BLE on the device.
+func (c *Client) PostBleDisable(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/ble/disable", query, payload)
+}
+
+// PostBlePairing sends a request to initiate BLE pairing on the device.
+func (c *Client) DeleteBlePairing(ctx context.Context, query url.Values) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodDelete, "/api/ble/pairing", query, nil)
+}
+
+// PostBlePairing sends a request to initiate BLE pairing on the device.
+func (c *Client) GetBleStatus(ctx context.Context, query url.Values) (*BleStatusResponse, error) {
+	return doJSON[BleStatusResponse](c, ctx, http.MethodGet, "/api/ble/status", query, nil)
 }
 
 func (b *BleStatusResponse) PrettyPrint() {

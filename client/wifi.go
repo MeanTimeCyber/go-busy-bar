@@ -1,7 +1,10 @@
 package client
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/markkurossi/tabulate"
@@ -47,6 +50,26 @@ type Network struct {
 	Security string `json:"security"`
 	// RSSI is the network signal level.
 	RSSI int `json:"rssi"`
+}
+
+// GetWifiStatus retrieves the current Wi-Fi status from the device.
+func (c *Client) GetWifiStatus(ctx context.Context, query url.Values) (*StatusResponse, error) {
+	return doJSON[StatusResponse](c, ctx, http.MethodGet, "/api/wifi/status", query, nil)
+}
+
+// PostWifiConnect sends a request to connect to a Wi-Fi network with the provided payload.
+func (c *Client) PostWifiConnect(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/wifi/connect", query, payload)
+}
+
+// PostWifiDisconnect sends a request to disconnect from the current Wi-Fi network.
+func (c *Client) PostWifiDisconnect(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/wifi/disconnect", query, payload)
+}
+
+// GetWifiNetworks retrieves the list of available Wi-Fi networks from the device.
+func (c *Client) GetWifiNetworks(ctx context.Context, query url.Values) (*NetworkResponse, error) {
+	return doJSON[NetworkResponse](c, ctx, http.MethodGet, "/api/wifi/networks", query, nil)
 }
 
 func (s *StatusResponse) PrettyPrint() {

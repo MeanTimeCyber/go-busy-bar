@@ -1,7 +1,10 @@
 package client
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/markkurossi/tabulate"
@@ -32,6 +35,51 @@ type DisplayBrightnessInfo struct {
 type AudioVolumeInfo struct {
 	// Volume is the current audio volume value (0-100).
 	Volume float64 `json:"volume"`
+}
+
+// GetHttpAccess retrieves the HTTP access information from the Busy Bar API.
+func (c *Client) GetHttpAccess(ctx context.Context, query url.Values) (*HttpAccessInfo, error) {
+	return doJSON[HttpAccessInfo](c, ctx, http.MethodGet, "/api/access", query, nil)
+}
+
+// GetName retrieves the device name from the Busy Bar API.
+func (c *Client) GetName(ctx context.Context, query url.Values) (*NameInfo, error) {
+	return doJSON[NameInfo](c, ctx, http.MethodGet, "/api/name", query, nil)
+}
+
+// SetName sets the device name using the Busy Bar API.
+func (c *Client) PostName(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/name", query, payload)
+}
+
+// GetDisplayBrightness retrieves the current display brightness from the Busy Bar API.
+func (c *Client) GetDisplayBrightness(ctx context.Context, query url.Values) (*DisplayBrightnessInfo, error) {
+	return doJSON[DisplayBrightnessInfo](c, ctx, http.MethodGet, "/api/display/brightness", query, nil)
+}
+
+// SetDisplayBrightness sets the display brightness using the Busy Bar API.
+func (c *Client) SetDisplayBrightness(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/display/brightness", query, payload)
+}
+
+// GetAudioVolume retrieves the current audio volume from the Busy Bar API.
+func (c *Client) GetAudioVolume(ctx context.Context, query url.Values) (*AudioVolumeInfo, error) {
+	return doJSON[AudioVolumeInfo](c, ctx, http.MethodGet, "/api/audio/volume", query, nil)
+}
+
+// SetAudioVolume sets the audio volume using the Busy Bar API.
+func (c *Client) SetAudioVolume(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/audio/volume", query, payload)
+}
+
+// GetAudioMute retrieves the current audio mute state from the Busy Bar API.
+func (c *Client) ConnectWebSocket(ctx context.Context, query url.Values) ([]byte, error) {
+	return c.do(ctx, http.MethodGet, "/api/status/ws", query, nil)
+}
+
+// SetAudioMute sets the audio mute state using the Busy Bar API.
+func (c *Client) GetScreen(ctx context.Context, query url.Values) ([]byte, error) {
+	return c.do(ctx, http.MethodGet, "/api/screen", query, nil)
 }
 
 func (d *DeviceName) PrettyPrint() {
