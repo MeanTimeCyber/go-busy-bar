@@ -27,12 +27,12 @@ func (c *Client) PostBleDisable(ctx context.Context, query url.Values, payload a
 	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/ble/disable", query, payload)
 }
 
-// PostBlePairing sends a request to initiate BLE pairing on the device.
+// DeleteBlePairing sends a request to delete BLE pairing on the device.
 func (c *Client) DeleteBlePairing(ctx context.Context, query url.Values) (*SuccessResponse, error) {
 	return doJSON[SuccessResponse](c, ctx, http.MethodDelete, "/api/ble/pairing", query, nil)
 }
 
-// PostBlePairing sends a request to initiate BLE pairing on the device.
+// GetBleStatus sends a request to retrieve the current BLE status on the device.
 func (c *Client) GetBleStatus(ctx context.Context, query url.Values) (*BleStatusResponse, error) {
 	return doJSON[BleStatusResponse](c, ctx, http.MethodGet, "/api/ble/status", query, nil)
 }

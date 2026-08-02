@@ -42,12 +42,17 @@ func (c *Client) GetHttpAccess(ctx context.Context, query url.Values) (*HttpAcce
 	return doJSON[HttpAccessInfo](c, ctx, http.MethodGet, "/api/access", query, nil)
 }
 
+// SetHttpAccess contains HTTP access control information.
+func (c *Client) SetHttpAccess(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
+	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/access", query, payload)
+}
+
 // GetName retrieves the device name from the Busy Bar API.
 func (c *Client) GetName(ctx context.Context, query url.Values) (*NameInfo, error) {
 	return doJSON[NameInfo](c, ctx, http.MethodGet, "/api/name", query, nil)
 }
 
-// SetName sets the device name using the Busy Bar API.
+// PostName sets the device name using the Busy Bar API.
 func (c *Client) PostName(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
 	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/name", query, payload)
 }
@@ -72,12 +77,12 @@ func (c *Client) SetAudioVolume(ctx context.Context, query url.Values, payload a
 	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/audio/volume", query, payload)
 }
 
-// GetAudioMute retrieves the current audio mute state from the Busy Bar API.
+// ConnectWebSocket connects to the Busy Bar WebSocket API.
 func (c *Client) ConnectWebSocket(ctx context.Context, query url.Values) ([]byte, error) {
 	return c.do(ctx, http.MethodGet, "/api/status/ws", query, nil)
 }
 
-// SetAudioMute sets the audio mute state using the Busy Bar API.
+// GetScreen retrieves the current screen state from the Busy Bar API.
 func (c *Client) GetScreen(ctx context.Context, query url.Values) ([]byte, error) {
 	return c.do(ctx, http.MethodGet, "/api/screen", query, nil)
 }

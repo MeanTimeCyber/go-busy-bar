@@ -15,11 +15,6 @@ func (c *Client) SetInputKey(ctx context.Context, query url.Values, payload any)
 	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/input", query, payload)
 }
 
-// HttpAccessInfo contains HTTP access control information.
-func (c *Client) SetHttpAccess(ctx context.Context, query url.Values, payload any) (*SuccessResponse, error) {
-	return doJSON[SuccessResponse](c, ctx, http.MethodPost, "/api/access", query, payload)
-}
-
 // GetVersion retrieves the firmware version from the Busy Bar API.
 func (c *Client) GetVersion(ctx context.Context, query url.Values) (*VersionInfo, error) {
 	return doJSON[VersionInfo](c, ctx, http.MethodGet, "/api/version", query, nil)
@@ -30,7 +25,7 @@ func (c *Client) GetTransport(ctx context.Context, query url.Values) (*NetworkIn
 	return doJSON[NetworkInterfaceInfo](c, ctx, http.MethodGet, "/api/transport", query, nil)
 }
 
-// GetStatus retrieves the overall status information from the Busy Bar API.
+// DumpLog retrieves the log dump from the Busy Bar API.
 func (c *Client) DumpLog(ctx context.Context, query url.Values, payload any) ([]byte, error) {
 	return c.do(ctx, http.MethodPost, "/api/log_dump", query, payload)
 }

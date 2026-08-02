@@ -45,7 +45,7 @@ func (c *Client) GetSmartHomeCommissioningStatus(ctx context.Context, query url.
 	return doJSON[SmartHomePairingInfo](c, ctx, http.MethodGet, "/api/smart_home/pairing", query, nil)
 }
 
-// GetSmartHomePairingPayload retrieves the smart home pairing payload (QR code and manual code).
+// StartSmartHomePairing retrieves the smart home pairing payload (QR code and manual code).
 func (c *Client) StartSmartHomePairing(ctx context.Context, query url.Values, payload any) (*SmartHomePairingPayload, error) {
 	return doJSON[SmartHomePairingPayload](c, ctx, http.MethodPost, "/api/smart_home/pairing", query, payload)
 }

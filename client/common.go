@@ -44,6 +44,7 @@ type APIError struct {
 	Body       []byte
 }
 
+// Error implements the error interface for APIError.
 func (e *APIError) Error() string {
 	if e.Response.Error != "" {
 		return fmt.Sprintf("api error %d: %s", e.StatusCode, e.Response.Error)
